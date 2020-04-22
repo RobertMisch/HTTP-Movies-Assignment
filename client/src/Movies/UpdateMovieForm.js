@@ -25,17 +25,18 @@ function UpdateMovieForm(props){
         axios
           .get(`http://localhost:5000/api/movies`)
           .then(res => {
-            console.log(res)
-            // setMovie(res.data); posibly have to filter this
+            // console.log(res)
+            setMovie(res.data.filter(item=>{return item.id===movie.id}));
+            console.log(movie) //posibly have to filter this
           })
           .catch(err => console.log(err));
-      }, [id]);
+      }, []);
 
       const changeHandler = e => {
         e.persist();
         let value = e.target.value;
         if (e.target.name === 'stars') {
-          value= value.split("")
+          value= value.split(" ")
         }
     
         setMovie({
@@ -53,7 +54,7 @@ function UpdateMovieForm(props){
             // res.data
             props.setMovieList(res.data);
             push(`/`);
-            // history.go(0) something gordon had to do to get things working
+            // history.go(0) //something gordon had to do to get things working
     
             // res.data ==> just updated item object
           })
@@ -91,10 +92,10 @@ function UpdateMovieForm(props){
               name="stars"
               onChange={changeHandler}
               placeholder="stars"
-              value={movie.stars.toString()}
+              value={movie.stars/*.toString*/}
             />
     
-            <button >Update</button>
+            <button type="submit">Update</button>
           </form>
         </div>
       );
