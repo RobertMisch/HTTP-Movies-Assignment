@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, history } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 //example movie object
@@ -18,25 +18,28 @@ const initialItem = {
   };
 
 function UpdateMovieForm(props){
+    console.log(props)
     const { push } = useHistory();
     const [movie, setMovie] = useState(initialItem);
     const { id } = useParams();
     useEffect(() => {
         axios
-          .get(`http://localhost:5000/api/movies`)
+          .get(`http://localhost:5000/api/movies/${id}`)
           .then(res => {
-            // console.log(res)
-            setMovie(res.data.filter(item=>{return item.id===movie.id}));
-            console.log(movie) //posibly have to filter this
+            console.log(res.data)
+            // console.log(id)
+            // console.log(res.data.filter(item=>{return item.id===id}))
+            setMovie(res.data);//.filter(item=>{return item.id===id})
+            console.log(movie) 
           })
           .catch(err => console.log(err));
-      }, []);
+      }, [id]);
 
       const changeHandler = e => {
         e.persist();
         let value = e.target.value;
         if (e.target.name === 'stars') {
-          value= value.split(" ")
+          value= value.split(",")
         }
     
         setMovie({
@@ -52,9 +55,10 @@ function UpdateMovieForm(props){
           .put(`http://localhost:5000/api/movies/${id}`, movie)
           .then(res => {
             // res.data
-            props.setMovieList(res.data);
+            // props.setMovieList(res.data);
+            props.getMovieList()
             push(`/`);
-            // history.go(0) //something gordon had to do to get things working
+            //history.go(0) //something gordon had to do to get things working
     
             // res.data ==> just updated item object
           })
@@ -92,7 +96,7 @@ function UpdateMovieForm(props){
               name="stars"
               onChange={changeHandler}
               placeholder="stars"
-              value={movie.stars/*.toString*/}
+              value={movie.stars.join(',')/*.toString*/}
             />
     
             <button type="submit">Update</button>
