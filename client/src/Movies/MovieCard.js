@@ -18,6 +18,7 @@ const MovieCard = props => {
           {star}
         </div>
       ))}
+      {/* <button onClick={() => push(`/update-movie/${params.id}`)}>Edit</button> */}
     </div>
   );
 };
